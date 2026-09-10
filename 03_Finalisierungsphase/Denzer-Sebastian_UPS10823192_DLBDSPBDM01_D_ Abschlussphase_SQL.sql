@@ -808,3 +808,39 @@ JOIN Users complained_user ON c.ComplaintUserId = complained_user.UserId;
 -- Beschwerde bearbeiten/löschen
 DELETE FROM Complaints
 WHERE ComplaintId = 1;
+
+
+-- ==========================
+-- Metadaten-Auswertung
+-- ==========================
+
+-- Anzahl der Tabellen
+
+SELECT COUNT(*) AS AnzahlTabellen
+FROM information_schema.tables
+WHERE table_schema = 'bookexchange'
+  AND table_type = 'BASE TABLE';
+  
+
+-- Größe der Datenbank
+
+SELECT
+    table_schema AS Datenbank,
+    ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS Groesse_MB
+FROM information_schema.tables
+WHERE table_schema = 'bookexchange'
+GROUP BY table_schema;
+
+
+-- Übersicht aller Tabellen inkl. Größen und Indizes
+
+SELECT
+    table_name AS Tabelle,
+    table_rows AS AnzahlEintraege,
+    ROUND(data_length / 1024, 2) AS Daten_KB,
+    ROUND(index_length / 1024, 2) AS Index_KB,
+    ROUND((data_length + index_length) / 1024, 2) AS Gesamt_KB
+FROM information_schema.tables
+WHERE table_schema = 'bookexchange'
+  AND table_type = 'BASE TABLE'
+ORDER BY table_name;
