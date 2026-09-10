@@ -275,36 +275,62 @@ CREATE TABLE Complaints (
 -- für häufig verwendete JOINs und Filteroperationen
 -- ================================================================================
 
+-- Unterstützt JOINs zwischen Books und Users sowie die Suche
+-- nach allen Büchern eines bestimmten Users.
 CREATE INDEX idx_books_owner
     ON Books (OwnerId);
 
+-- Unterstützt JOINs zwischen Books und Languages bei der Anzeige
+-- von Buchinformationen.
 CREATE INDEX idx_books_language
     ON Books (LanguageId);
 
+-- Unterstützt die Suche nach Büchern eines bestimmten Autors
+-- über die Beziehungstabelle.
+-- Der Primärschlüssel (BookId, AuthorId) deckt die Suche über BookId
+-- bereits ab, daher ist hier nur ein zusätzlicher Index auf AuthorId nötig.
 CREATE INDEX idx_bookauthors_author
     ON BookAuthors (AuthorId);
 
+-- Unterstützt die Suche nach Büchern eines bestimmten Genres
+-- über die Beziehungstabelle.
+-- Der Primärschlüssel (BookId, GenreId) deckt die Suche über BookId
+-- bereits ab, daher ist hier nur ein zusätzlicher Index auf GenreId nötig.
 CREATE INDEX idx_bookgenres_genre
     ON BookGenres (GenreId);
 
+-- Unterstützt die Suche nach allen Leihanfragen eines bestimmten Users,
+-- z. B. bei der Verwaltung eines gesperrten Users.
 CREATE INDEX idx_borrowrequests_user
     ON BorrowRequests (UserId);
 
+-- Unterstützt JOINs zwischen BorrowRequests und Books und damit
+-- die Suche nach Leihanfragen zu einem bestimmten Buch.
 CREATE INDEX idx_borrowrequests_book
     ON BorrowRequests (BookId);
 
+-- Unterstützt JOINs zwischen Borrows und Books, insbesondere bei
+-- der Anzeige der aktuell ausgeliehenen Bücher.
 CREATE INDEX idx_borrows_book
     ON Borrows (BookId);
 
+-- Unterstützt JOINs zwischen Borrows und Users zur Ermittlung
+-- des Besitzers eines ausgeliehenen Buches.
 CREATE INDEX idx_borrows_owner
     ON Borrows (OwnerId);
 
+-- Unterstützt JOINs zwischen Borrows und Users zur Ermittlung
+-- des Users, der ein Buch ausgeliehen hat.
 CREATE INDEX idx_borrows_borrower
     ON Borrows (BorrowerId);
 
+-- Unterstützt die Suche nach Bewertungen eines bestimmten Buches
+-- und entsprechende JOINs mit der Books-Tabelle.
 CREATE INDEX idx_valuations_book
     ON Valuations (BookId);
 
+-- Unterstützt die Suche nach Bewertungen eines bestimmten Users
+-- und entsprechende JOINs mit der Users-Tabelle.
 CREATE INDEX idx_valuations_user
     ON Valuations (UserId);
 
